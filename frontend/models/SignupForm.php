@@ -13,7 +13,10 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
-
+    public $first_name;
+    public $last_name;
+    public $phone;
+    public $uuid;
 
     /**
      * {@inheritdoc}
@@ -34,6 +37,13 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
+            ['last_name', 'required',],
+            ['first_name', 'required'],
+            ['phone', 'required'],
+            ['first_name', 'string', 'max' => 255],
+            ['last_name', 'string', 'max' => 255],
+            ['first_name', 'required'],
+            ['phone', 'string', 'max' => 11, 'min' => 11],
         ];
     }
 
@@ -52,11 +62,13 @@ class SignupForm extends Model
         $user->username = $this->username;
         $user->email = $this->email;
 
-        /*
-        $user->first_name = 'admin';
-        $user->last_name = 'admin';
-        */
 
+        $user->first_name = $this->first_name;
+        $user->last_name = $this->last_name;
+        $user->phone = $this->phone;
+
+        $uuid = md5($user->username . $user->phone . time());
+        $user->uuid = $uuid;
         $user->status = User::STATUS_INACTIVE;
         $user->setPassword($this->password);
         $user->generateAuthKey();
