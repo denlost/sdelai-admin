@@ -4,6 +4,7 @@ use common\models\User;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 return [
     [
@@ -85,6 +86,32 @@ return [
             ]]
         ],
         'filterInputOptions' => ['placeholder' => 'Статус пользователя...'],
+    ],
+    [
+        'class' => 'kartik\grid\ActionColumn',
+        'header' => 'Бан пользователя',
+        'template' => '{setban}',
+        'buttons' => [
+            'setban' => function ($url, $model) {
+                $btnClass = 'btn-success';
+                $btnText = 'Забанить';
+                
+                return Html::a($btnText, $url, [
+                    'setban',
+                    'class' => 'btn btn-sm ' . $btnClass,
+                    'data-pjax' => "0",
+                    'role' => "modal-remote",
+                    'data-request-method' => "get",
+                    'data-toggle' => "tooltip",
+                ]);
+        
+            },
+        ],
+        'dropdown' => false,
+        'vAlign'=>'middle',
+        'urlCreator' => function($action, $model, $key, $index) {
+            return Url::to([$action,'id'=>$key]);
+        },
     ],
     [
         'class' => 'kartik\grid\ActionColumn',

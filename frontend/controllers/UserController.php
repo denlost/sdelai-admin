@@ -4,7 +4,9 @@ namespace frontend\controllers;
 
 use Yii;
 use common\models\User;
+use frontend\forms\army\SetBanForm;
 use frontend\models\search\UserSearch;
+use yii\bootstrap\BaseHtml;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
@@ -269,5 +271,54 @@ class UserController extends BaseController
             return $model;
 
         throw new NotFoundHttpException('Запрашиваемая страница не существует.');
+    }
+    public function actionSetBan($id)
+    {
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);
+        $setBanForm = new SetBanForm($model);
+
+        if (!$request->isAjax) {
+            if ($request->isPost && $setBanForm->load($request->post()) && $setBanForm->save())
+                return $this->redirect($request->referrer);
+
+            return $this->redirect(['index']);
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        if ($request->isPost && $setBanForm->load($request->post())) {
+            if (!$$setBanForm->save()) {
+                Yii::$app->response->format = Response::FORMAT_JSON;
+
+                return [
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => 'Ошибка',
+                    'content' => '<span class="text-error">' . BaseHtml::errorSummary($setBanForm) . '</span>',
+                    'footer' => Html::button('Закрыть', [
+                        'class' => 'btn btn-default pull-left',
+                        'data-dismiss' => 'modal'
+                    ]),
+                ];
+            } else {
+                return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+            }
+        } else {
+            return [
+                'title' => 'Забанить',
+                'content' => $this->renderAjax('setban', [
+                    'setBanForm' => $setBanForm,
+                ]),
+                'footer' =>
+                Html::button('Закрыть', [
+                    'class' => 'btn btn-default pull-left',
+                    'data-dismiss' => 'modal'
+                ]) .
+                    Html::button('Сохранить', [
+                        'class' => 'btn btn-primary',
+                        'type' => 'submit'
+                    ])
+            ];
+        }
     }
 }
