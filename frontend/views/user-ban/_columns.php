@@ -42,6 +42,9 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'reason_id',
+        'value' => function ($model) {
+            return $model->reason->code;
+        },
         'filterType' => GridView::FILTER_TYPEAHEAD,
         'filterWidgetOptions' => [
             'dataset' => [[
