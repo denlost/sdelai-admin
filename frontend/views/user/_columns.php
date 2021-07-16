@@ -89,6 +89,22 @@ return [
         'filterInputOptions' => ['placeholder' => 'Статус пользователя...'],
     ],
     [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'banned',
+        'value' => function ($model) {
+            return UserBan::banned($model) ? "Забанен" : "Активный";
+        },
+        'label' => 'Статус',
+        'filterType' => GridView::FILTER_TYPEAHEAD,
+        'filterWidgetOptions' => [
+            'dataset' => [[
+                'local' => ArrayHelper::map(User::find()->all(), 'id', 'status'),
+                'limit' => 10,
+            ]]
+        ],
+        'filterInputOptions' => ['placeholder' => 'Статус пользователя...'],
+    ],
+    [
         'class' => 'kartik\grid\ActionColumn',
         'header' => 'Бан пользователя',
         'template' => '{setban}',
