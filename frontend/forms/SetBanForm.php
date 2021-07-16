@@ -49,7 +49,7 @@ class SetBanForm extends Model
         $userban = new UserBan();
         $userban->user_id = $this->user->id;
         $userban->executor_id = Yii::$app->user->getId();
-        $userban->reason_id = $this->reason;
+    //    $userban->reason_id = $this->reason;
         $userban->date_start = date('m/d/Y h:i:s', time());
         if($this->bantimehrs == "0" && $this->bantimemin == "0" && $this->bantimesec == "0")
         {
@@ -57,7 +57,7 @@ class SetBanForm extends Model
         }
         else
         {
-            $userban->date_end = strtotime("+$this->bantimehrs hours $this->bantimemin minutes +$this->bantimesec seconds");
+            $userban->date_end = strtotime("+$this->bantimesec days $this->bantimehrs hours +$this->bantimemin minutes");
         }
         if (!$userban->save()) {
             $this->addError('error', print_r($userban->getFirstErrors(), true));
