@@ -92,13 +92,12 @@ class UserBan extends \yii\db\ActiveRecord
     public static function banned($user)
     {
         $b = self::find()->where(['user_id' => $user->id])->all();
-        if($b != null && $b->date_end > date('Y-m-d H:i:s'))
-        {
-            return self::find()->where(['user_id' => $user->id])->exists();
-        }
-        else
-        {
+        if (!$b || count($b) == 0)
             return false;
-        }
+
+        if ($b[count($b) - 1]->date_end > date('Y-m-d H:i:s'))
+            return self::find()->where(['user_id' => $user->id])->exists();
+
+        return false;
     }
 }
