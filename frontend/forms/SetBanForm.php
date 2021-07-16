@@ -54,6 +54,14 @@ class SetBanForm extends Model
         $entry->executor_id = Yii::$app->user->id;
         $entry->user_id = $this->instance->id;
         $entry->reason_id = $reason->id;
+        if($this->days == "0" && $this->hours == "0" && $this->minutes == "0")
+        {
+            $entry->date_end = null;
+        }
+        else
+        {
+            $entry->date_end = date("Y-m-d H:i:s" ,strtotime("+$this->days days $this->hours hours +$this->minutes minutes"));
+        }
 
         if (!$entry->save())
             throw new ModelNotValidException($entry);
