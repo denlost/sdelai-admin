@@ -4,7 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use common\models\User;
-use frontend\forms\army\SetBanForm;
+use frontend\forms\SetBanForm;
 use frontend\models\search\UserSearch;
 use yii\bootstrap\BaseHtml;
 use yii\web\NotFoundHttpException;
@@ -272,7 +272,7 @@ class UserController extends BaseController
 
         throw new NotFoundHttpException('Запрашиваемая страница не существует.');
     }
-    public function actionSetBan($id)
+    public function actionSetban($id)
     {
         $request = Yii::$app->request;
         $model = $this->findModel($id);

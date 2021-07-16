@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\forms\army;
+namespace frontend\forms;
 
 use common\models\User;
 use common\models\UserBan;
