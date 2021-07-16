@@ -1,6 +1,7 @@
 <?php
 
 use common\models\User;
+use common\models\UserBan;
 use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
@@ -95,6 +96,12 @@ return [
             'setban' => function ($url, $model) {
                 $btnClass = 'btn-success';
                 $btnText = 'Забанить';
+
+                // TODO: Check for actual ban entry
+                if (UserBan::banned($model)) {
+                    $btnClass = 'disabled';
+                    $btnText = 'Забанен';
+                }
                 
                 return Html::a($btnText, $url, [
                     'setban',

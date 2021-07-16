@@ -2,67 +2,61 @@
 
 namespace frontend\forms;
 
-use common\models\User;
+use common\exceptions\ModelNotValidException;
+use common\models\ReportReason;
 use common\models\UserBan;
 use Yii;
 use yii\base\Model;
 
-/*
-* @property Army $army
-*/
 class SetBanForm extends Model
 {
-    public $error;
-    
-    public $bantimehrs;
+    private $instance;
 
-    public $bantimemin;
-    
-    public $bantimesec;
-    
-    public $reason;
-
-    private $user;
+    public $days;
+    public $hours;
+    public $minutes;
+    public $reason_code;
 
     public function rules()
     {
         return [
-            ['error', 'safe'],
+            [['days', 'hours', 'minutes'], 'integer'],
+            ['reason_code', 'string'],
         ];
     }
 
-    public function __construct(User $user, $config = [])
+    public function attributeLabels()
+    {
+        return [
+            'days' => 'Дни',
+            'hours' => 'Часы',
+            'minutes' => 'Минуты',
+            'reason_code' => 'Причина',
+        ];
+    }
+
+    public function __construct($instance, $config = [])
     {
         parent::__construct($config);
-        
 
-        $this->user = $user;
+        $this->instance = $instance;
     }
-    // 'id' => 'ID',
-    // 'user_id' => 'ID Пользователя',
-    // 'executor_id' => 'ID Забанившего',
-    // 'reason_id' => 'Причина',
-    // 'date_start' => 'Дата начала',
-    // 'date_end' => 'Дата окончания',
-    public function save(): bool
+
+    public function save()
     {
-        $userban = new UserBan();
-        $userban->user_id = $this->user->id;
-        $userban->executor_id = Yii::$app->user->getId();
-    //    $userban->reason_id = $this->reason;
-        $userban->date_start = date('m/d/Y h:i:s', time());
-        if($this->bantimehrs == "0" && $this->bantimemin == "0" && $this->bantimesec == "0")
-        {
-            $userban->date_end = "-";
-        }
-        else
-        {
-            $userban->date_end = strtotime("+$this->bantimesec days $this->bantimehrs hours +$this->bantimemin minutes");
-        }
-        if (!$userban->save()) {
-            $this->addError('error', print_r($userban->getFirstErrors(), true));
-            return false;
-        }
+        $reason = new ReportReason();
+        $reason->name = "reason for ban";
+        $reason->code = $this->reason_code;
+        $reason->save();
+
+        $entry = new UserBan();
+
+        $entry->executor_id = Yii::$app->user->id;
+        $entry->user_id = $this->instance->id;
+        $entry->reason_id = $reason->id;
+
+        if (!$entry->save())
+            throw new ModelNotValidException($entry);
 
         return true;
     }

@@ -8,14 +8,10 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-        <?= \yii\helpers\BaseHtml::errorSummary($setBanForm) ?>
-
-        <?= $form->field($setBanForm, 'bantimesec')->label('Длительность бана (дни)'); ?>
-
-        <?= $form->field($setBanForm, 'bantimehrs')->label('Длительность бана (часы)'); ?>
-
-        <?= $form->field($setBanForm, 'bantimemin')->label('Длительность бана (минуты)'); ?>
-
+        <?= $form->field($setBanForm, 'days'); ?>
+        <?= $form->field($setBanForm, 'hours'); ?>
+        <?= $form->field($setBanForm, 'minutes'); ?>
+        <?= $form->field($setBanForm, 'reason_code'); ?>
 
     <?php ActiveForm::end(); ?>
 

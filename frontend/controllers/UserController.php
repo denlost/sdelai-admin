@@ -288,7 +288,7 @@ class UserController extends BaseController
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         if ($request->isPost && $setBanForm->load($request->post())) {
-            if (!$$setBanForm->save()) {
+            if (!$setBanForm->save()) {
                 Yii::$app->response->format = Response::FORMAT_JSON;
 
                 return [

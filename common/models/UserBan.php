@@ -88,4 +88,9 @@ class UserBan extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'executor_id']);
     }
+
+    public static function banned($user)
+    {
+        return self::find()->where(['user_id' => $user->id])->exists();
+    }
 }
