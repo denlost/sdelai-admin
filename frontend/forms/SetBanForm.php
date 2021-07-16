@@ -40,6 +40,9 @@ class SetBanForm extends Model
         parent::__construct($config);
 
         $this->instance = $instance;
+        $this->days = 0;
+        $this->hours = 0;
+        $this->minutes = 0;
     }
 
     public function save()
@@ -54,6 +57,10 @@ class SetBanForm extends Model
         $entry->executor_id = Yii::$app->user->id;
         $entry->user_id = $this->instance->id;
         $entry->reason_id = $reason->id;
+
+        $entry->date_start = date('Y-m-d H:i:s');
+        $unban_time = date('Y-m-d H:i:s', strtotime("+{$this->days} days {$this->hours} hours {$this->minutes} minutes"));
+        $entry->date_end = $unban_time;
 
         if (!$entry->save())
             throw new ModelNotValidException($entry);
